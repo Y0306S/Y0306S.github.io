@@ -34,144 +34,41 @@
     <main>
       <h1>work</h1>
       <p class="lede">
-        Four notes from the current resume. The compact version is on
+        Here i dive much deeper into some projects I have worked on
         <a href="cv.html">cv</a>.
       </p>
 
       <article class="work-item">
-        <h2>Automated dubbing pipeline</h2>
+        <h2><a href="work/iqiyi.html">Automated dubbing pipeline</a></h2>
         <p class="meta">iQIYI International · full stack intern · Aug 2026 – Jan 2027</p>
         <p>
           An end-to-end stack that takes an episode from audio preprocessing
           through model inference and segment synthesis, so dubbed speech
           comes out more coherent than a manual cut-and-paste job.
         </p>
-        <ul>
-          <li>
-            About 67% faster than the manual baseline; roughly 7–10 hours
-            saved per episode.
-          </li>
-          <li>
-            Comparing and fine-tuning TTS / voice-conversion models
-            (GPT-SoVITS, Qwen-3.0-TTS, Seed-VC, Chatterbox) for cross-lingual
-            inference.
-          </li>
-          <li>
-            Speech emotion recognition with emotion2vec and a fine-tuned
-            wav2vec2, to pull emotion- and timbre-matched reference audio for
-            background characters.
-          </li>
-          <li>
-            Frontend and backend work on the dubbing site: JavaScript, CSS,
-            Python (Flask, Celery).
-          </li>
-        </ul>
-        <ul class="tags" aria-label="Skills">
-          <li>TTS</li>
-          <li>voice conversion</li>
-          <li>speech emotion recognition</li>
-          <li>fine-tuning</li>
-          <li>Flask</li>
-          <li>Celery</li>
-          <li>JavaScript</li>
-        </ul>
+        <p class="more"><a href="work/iqiyi.html">deeper dive →</a></p>
       </article>
 
       <article class="work-item">
-        <h2>Self-evolving hyperparameter search</h2>
+        <h2><a href="work/dair.html">Self-evolving hyperparameter search</a></h2>
         <p class="meta">DAIR Lab, Peking University · research assistant · Dec 2025 – Oct 2026</p>
         <p>
           A tuning framework that mixes Bayesian optimisation with open-source
           LLMs, then asks whether a job done on one task is actually usable on
           another.
         </p>
-        <ul>
-          <li>
-            Gaussian processes to find similar tasks; fANOVA to decide if a
-            finished tuning job can transfer.
-          </li>
-          <li>
-            A multi-stage post-training stack on Qwen-3.5-9B (SFT, DPO,
-            REINFORCE) that beat SOTA Bayesian methods and SOTA LLMs by 27%
-            on the lab’s HPO setup.
-          </li>
-          <li>
-            Extending transfer to peptide and query optimisation by encoding a
-            combinatorial search space with a VAE into a continuous latent
-            space.
-          </li>
-        </ul>
-        <ul class="tags" aria-label="Skills">
-          <li>Bayesian optimisation</li>
-          <li>Gaussian processes</li>
-          <li>fANOVA</li>
-          <li>SFT</li>
-          <li>DPO</li>
-          <li>REINFORCE</li>
-          <li>VAE</li>
-          <li>transfer learning</li>
-        </ul>
+        <p class="more"><a href="work/dair.html">deeper dive →</a></p>
       </article>
 
       <article class="work-item">
-        <h2>National land statistics</h2>
-        <p class="meta">Singapore Land Authority · data engineer intern · Mar 2025 – Jun 2025</p>
-        <p>
-          The official land-area numbers lived in black-box geospatial logic.
-          The job was to make that lineage readable, then reproduce it.
-        </p>
-        <ul>
-          <li>
-            Documented the legacy algorithms used for national land
-            statistics.
-          </li>
-          <li>
-            ArcPy pipelines for ingest and preprocessing; 99.8% parity with
-            official land-area metrics.
-          </li>
-          <li>
-            Batch processing to stabilise national-scale vector production
-            after the old ArcGIS workflows started falling over.
-          </li>
-        </ul>
-        <ul class="tags" aria-label="Skills">
-          <li>ArcPy</li>
-          <li>ArcGIS</li>
-          <li>geospatial pipelines</li>
-          <li>data lineage</li>
-          <li>batch processing</li>
-        </ul>
-      </article>
-
-      <article class="work-item">
-        <h2>GEM-MM</h2>
+        <h2><a href="work/gem-mm.html">GEM-MM</a></h2>
         <p class="meta">project · vision-language alignment</p>
         <p>
           An on-policy preference method for VLMs: score chain-of-thought with
           a fork-versus-final entropy reward, then update the full model with
           group-normalised policy gradients (SEGA).
         </p>
-        <ul>
-          <li>
-            On a small budget of 3,000 MM-RLHF prompt pairs, standard
-            multimodal DPO-style, image-conditional, and self-improvement pair
-            methods saturate.
-          </li>
-          <li>
-            On Qwen3-VL-4B, GEM-MM beat those alignment baselines under the
-            same small budget (AMBER Hallucination, HallusionBench).
-          </li>
-        </ul>
-        <ul class="tags" aria-label="Skills">
-          <li>VLMs</li>
-          <li>preference alignment</li>
-          <li>on-policy RL</li>
-          <li>policy gradients</li>
-          <li>chain-of-thought</li>
-        </ul>
-        <p class="links">
-          <a href="https://github.com/SNOWTEAM2023/GEM-MM">code</a>
-        </p>
+        <p class="more"><a href="work/gem-mm.html">deeper dive →</a></p>
       </article>
     </main>
 
@@ -185,7 +82,8 @@
           <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
         </div>
       </details>
-      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a
+          href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
     </footer>
   </div>
 </body>

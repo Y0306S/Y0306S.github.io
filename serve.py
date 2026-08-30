@@ -4,6 +4,7 @@ from livereload import Server
 
 server = Server()
 server.watch("*.html")
+server.watch("work/*.html")
 server.watch("css/*.css")
 server.watch("cv/*")
 server.watch("img/*")
