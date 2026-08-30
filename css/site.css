@@ -1,0 +1,376 @@
+:root {
+  --paper: #f4efe6;
+  --ink: #1c1914;
+  --muted: #6b6560;
+  --rule: #d8d0c4;
+  --accent: #1f6f6a;
+  --accent-hover: #155652;
+  --tag-fill: #e4ebe4;
+  --measure: 40rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+.wrap {
+  width: min(var(--measure), calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 1.6rem 0 4.5rem;
+  border-left: 1px solid var(--rule);
+  padding-left: 1.75rem;
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  font-family: "IBM Plex Serif", "Iowan Old Style", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wordmark:hover {
+  color: var(--accent);
+}
+
+.running {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--muted);
+}
+
+nav {
+  font-size: 0.82rem;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav a[aria-current="page"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+nav .slash {
+  color: var(--accent);
+  margin: 0 0.35rem;
+  font-weight: 500;
+}
+
+h1 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.35rem;
+}
+
+h2 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.45rem;
+}
+
+.lede,
+p {
+  margin: 0 0 1.15rem;
+}
+
+.block {
+  margin-bottom: 1.7rem;
+}
+
+.kicker {
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+
+ul {
+  margin: 0 0 1.15rem;
+  padding-left: 1.15rem;
+}
+
+li {
+  margin: 0.2rem 0;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 2.4rem;
+}
+
+sup,
+.fn {
+  font-size: 0.7em;
+  line-height: 0;
+}
+
+.work-item {
+  padding: 0 0 1.7rem;
+  margin: 0 0 1.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.work-item:last-of-type {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: 0 0 0.7rem;
+}
+
+.links {
+  font-size: 0.82rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0.85rem 0 0;
+  padding: 0;
+}
+
+.tags li {
+  margin: 0;
+  padding: 0.14rem 0.48rem;
+  border: 1px solid var(--accent);
+  background: var(--tag-fill);
+  color: var(--accent-hover);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+
+.cv-head {
+  margin-bottom: 1.8rem;
+}
+
+.cv-name {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.cv-contacts {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.cv-section {
+  margin: 1.7rem 0 0;
+}
+
+.cv-section h2 {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.entry {
+  margin: 0 0 1.15rem;
+}
+
+.entry-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.entry-top strong {
+  font-weight: 600;
+}
+
+.when {
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.role {
+  margin: 0.1rem 0 0.45rem;
+}
+
+.skills dt {
+  font-weight: 600;
+  margin: 0.4rem 0 0.1rem;
+}
+
+.skills dd {
+  margin: 0;
+}
+
+.page-tools {
+  margin: 0 0 1.4rem;
+  font-size: 0.82rem;
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35em;
+  margin-top: 2.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.email-pop {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.email-pop > summary {
+  display: inline;
+  cursor: pointer;
+  color: var(--accent);
+  list-style: none;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.email-pop > summary::-webkit-details-marker {
+  display: none;
+}
+
+.email-pop[open] > summary {
+  color: var(--accent-hover);
+}
+
+footer:has(.email-pop[open]) {
+  padding-bottom: 6.5rem;
+}
+
+.email-pop-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.45rem);
+  z-index: 2;
+  min-width: 17.5rem;
+  padding: 0.55rem 0.7rem 0.65rem;
+  background: var(--paper);
+  border: 1px solid var(--accent);
+}
+
+.email-pop-panel p {
+  margin: 0 0 0.2rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.email-pop-panel a {
+  display: block;
+  margin: 0 0 0.55rem;
+}
+
+.email-pop-panel a:last-child {
+  margin-bottom: 0;
+}
+
+.music {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin: 0 0 1.25rem;
+}
+
+.music h2 {
+  font-size: 0.95rem;
+  margin: 0 0 0.45rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.music ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.music li {
+  margin: 0.35rem 0 0;
+  padding: 0;
+}
+
+@media (max-width: 52rem) {
+  html {
+    font-size: 16px;
+  }
+
+  .wrap {
+    width: calc(100% - 1.5rem);
+    padding-left: 1.1rem;
+  }
+
+  .masthead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+
+  .entry-top {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .when {
+    white-space: normal;
+  }
+}
