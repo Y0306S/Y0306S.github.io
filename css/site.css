@@ -286,15 +286,16 @@ sup,
 }
 
 footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 0.35em;
   margin-top: 2.8rem;
   padding-top: 0.9rem;
   border-top: 1px solid var(--rule);
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+footer > p {
+  display: block;
+  margin: 0.45rem 0 0;
 }
 
 .email-pop {
