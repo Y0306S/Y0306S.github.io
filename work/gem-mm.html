@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEM-MM — Chua Yuan Shan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <link rel="icon" href="../img/favicon.png?v=3" type="image/png" />
+  <script src="../js/site.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <a class="wordmark" href="../index.html">yuan shan/chua</a>
+        <span class="running">singapore</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="../index.html">about</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../work.html" aria-current="page">work</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../cv.html">cv</a>
+      </nav>
+    </header>
+
+    <main class="dive">
+      <p class="back"><a href="../work.html">← work</a></p>
+      <h1>GEM-MM</h1>
+      <p class="meta">project · vision-language alignment</p>
+
+      <h2>The problem</h2>
+      <p>
+        Preference-aligning a vision-language model on a small budget is easy to
+        saturate. With only 3,000 MM-RLHF prompt pairs, standard multimodal DPO-style,
+        image-conditional, and self-improvement pair methods stop improving.
+      </p>
+
+      <h2>What I did</h2>
+      <ul>
+        <li>
+          Built an on-policy preference method that scores chain-of-thought with a
+          fork-versus-final entropy reward.
+        </li>
+        <li>
+          Updated the full VLM with group-normalised policy gradients (SEGA).
+        </li>
+        <li>
+          Compared against those saturating pair methods on Qwen3-VL-4B.
+        </li>
+      </ul>
+
+      <h2>What came out</h2>
+      <p>
+        Under that small training budget, GEM-MM beat the SOTA alignment baselines on
+        AMBER Hallucination and HallusionBench.
+      </p>
+      <p class="links">
+        <a href="https://github.com/SNOWTEAM2023/GEM-MM">code</a>
+      </p>
+      <p>
+        This page is a stub I can grow. Reward curves and example traces belong here.
+      </p>
+
+      <ul class="tags" aria-label="Skills">
+        <li>VLMs</li>
+        <li>preference alignment</li>
+        <li>on-policy RL</li>
+        <li>policy gradients</li>
+        <li>chain-of-thought</li>
+      </ul>
+    </main>
+
+    <footer>
+      <details class="email-pop">
+        <summary>email</summary>
+        <div class="email-pop-panel">
+          <p>personal</p>
+          <a href="mailto:chuanyuanshan@gmail.com">chuanyuanshan@gmail.com</a>
+          <p>school</p>
+          <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
+        </div>
+      </details>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+    </footer>
+  </div>
+</body>
+</html>

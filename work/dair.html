@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Self-evolving hyperparameter search — Chua Yuan Shan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <link rel="icon" href="../img/favicon.png?v=3" type="image/png" />
+  <script src="../js/site.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <a class="wordmark" href="../index.html">yuan shan/chua</a>
+        <span class="running">singapore</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="../index.html">about</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../work.html" aria-current="page">work</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../cv.html">cv</a>
+      </nav>
+    </header>
+
+    <main class="dive">
+      <p class="back"><a href="../work.html">← work</a></p>
+      <h1>Self-evolving hyperparameter search</h1>
+      <p class="meta">DAIR Lab, Peking University · research assistant · Dec 2025 – Oct 2026</p>
+
+      <h2>The problem</h2>
+      <p>
+        Hyperparameter search is expensive if every new task starts from scratch.
+        The question was whether a finished tuning job on a similar task is actually
+        worth transferring, and how an LLM sits next to Bayesian optimisation instead
+        of replacing it blindly.
+      </p>
+
+      <h2>What I did</h2>
+      <ul>
+        <li>
+          Built a tuning framework that mixes Bayesian optimisation with open-source LLMs.
+        </li>
+        <li>
+          Used a Gaussian process to find similar tasks, and fANOVA to decide if a
+          finished job can transfer.
+        </li>
+        <li>
+          Designed a multi-stage post-training stack on Qwen-3.5-9B (SFT, DPO, REINFORCE).
+        </li>
+        <li>
+          Started extending the same transfer idea to peptide and query optimisation by
+          encoding a combinatorial search space with a VAE into a continuous latent space.
+        </li>
+      </ul>
+
+      <h2>What came out</h2>
+      <p>
+        On the lab’s HPO setup, the post-training stack beat SOTA Bayesian methods and
+        SOTA LLMs by 27%.
+      </p>
+      <p>
+        This page is a stub I can grow. Plots, ablations, and when transfer fails belong here.
+      </p>
+
+      <ul class="tags" aria-label="Skills">
+        <li>Bayesian optimisation</li>
+        <li>Gaussian processes</li>
+        <li>fANOVA</li>
+        <li>SFT</li>
+        <li>DPO</li>
+        <li>REINFORCE</li>
+        <li>VAE</li>
+        <li>transfer learning</li>
+      </ul>
+    </main>
+
+    <footer>
+      <details class="email-pop">
+        <summary>email</summary>
+        <div class="email-pop-panel">
+          <p>personal</p>
+          <a href="mailto:chuanyuanshan@gmail.com">chuanyuanshan@gmail.com</a>
+          <p>school</p>
+          <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
+        </div>
+      </details>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Automated dubbing pipeline — Chua Yuan Shan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <link rel="icon" href="../img/favicon.png?v=3" type="image/png" />
+  <script src="../js/site.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <a class="wordmark" href="../index.html">yuan shan/chua</a>
+        <span class="running">singapore</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="../index.html">about</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../work.html" aria-current="page">work</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../cv.html">cv</a>
+      </nav>
+    </header>
+
+    <main class="dive">
+      <p class="back"><a href="../work.html">← work</a></p>
+      <h1>Automated dubbing pipeline</h1>
+      <p class="meta">iQIYI International · full stack intern · Aug 2026 – Jan 2027</p>
+
+      <h2>The problem</h2>
+      <p>
+        Dubbing an episode by hand means cutting audio, matching mouths, and stitching
+        speech that still sounds like it was assembled. I worked on an end-to-end stack
+        that takes an episode from audio prep through model inference to segment
+        synthesis, so the dubbed speech comes out as one coherent pass.
+      </p>
+
+      <h2>What I did</h2>
+      <ul>
+        <li>
+          Wired preprocessing, inference, and synthesis into one pipeline instead of
+          a pile of manual steps.
+        </li>
+        <li>
+          Compared and fine-tuned TTS and voice-conversion models (GPT-SoVITS,
+          Qwen-3.0-TTS, Seed-VC, Chatterbox) for cross-lingual inference.
+        </li>
+        <li>
+          Fine-tuned speech emotion recognition (emotion2vec, wav2vec2) so background
+          characters can borrow emotion- and timbre-matched reference audio.
+        </li>
+        <li>
+          Frontend and backend on the dubbing site: JavaScript, CSS, Python (Flask, Celery).
+        </li>
+      </ul>
+
+      <h2>What came out</h2>
+      <p>
+        About 67% faster than the manual baseline — roughly 7–10 hours saved per episode.
+      </p>
+      <p>
+        This page is a stub I can grow. Notes on model choice, failure cases, and
+        what still sounds fake belong here.
+      </p>
+
+      <ul class="tags" aria-label="Skills">
+        <li>TTS</li>
+        <li>voice conversion</li>
+        <li>speech emotion recognition</li>
+        <li>fine-tuning</li>
+        <li>Flask</li>
+        <li>Celery</li>
+        <li>JavaScript</li>
+      </ul>
+    </main>
+
+    <footer>
+      <details class="email-pop">
+        <summary>email</summary>
+        <div class="email-pop-panel">
+          <p>personal</p>
+          <a href="mailto:chuanyuanshan@gmail.com">chuanyuanshan@gmail.com</a>
+          <p>school</p>
+          <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
+        </div>
+      </details>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+    </footer>
+  </div>
+</body>
+</html>
