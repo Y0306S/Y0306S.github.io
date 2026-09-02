@@ -30,20 +30,25 @@
     <main class="dive">
       <p class="back"><a href="../work.html">← work</a></p>
       <h1>Self-evolving hyperparameter search</h1>
-      <p class="meta">DAIR Lab, Peking University · research assistant · Dec 2025 – Oct 2026</p>
+      <p class="meta">Data and Intelligence Research Lab, Peking University · research assistant · Dec 2025 – Oct 2026</p>
+
+      <! in the future we can consider adding in a portion on how I was lost in y1 and decided to apply worked my ass off during winter break to study concepts and land the role >
 
       <h2>The problem</h2>
       <p>
-        Hyperparameter search is expensive if every new task starts from scratch.
-        The question was whether a finished tuning job on a similar task is actually
-        worth transferring, and how an LLM sits next to Bayesian optimisation instead
-        of replacing it blindly.
+        Hyperparameter Optimization (HPO) itself is a very big problem: especially in high dimensional spaces or finding more efficient ways (less compute or less time). 
+        Current research in using LLMs for Automated Machine Learning (LLM4AutoML) is still in its earlier stages where LLMs are used as a warm-start to traditional Bayesian optimisation algorithms.
+        But we thought what if involving LLMs in the so called 'improvement phase' could help improve the performance of HPO as compared to traditional methods?
       </p>
 
-      <h2>What I did</h2>
+      <p>
+        And with the integrations of LLMs, the fact is that it can be trained on previous results or runs, can we possibly create a self-evolving HPO system that can learn from previous runs and improve itself?
+      </p>
+
+      <h2>The Approach</h2>
       <ul>
         <li>
-          Built a tuning framework that mixes Bayesian optimisation with open-source LLMs.
+          As previous research suggests, Bayesian Optimization is 
         </li>
         <li>
           Used a Gaussian process to find similar tasks, and fANOVA to decide if a
