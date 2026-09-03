@@ -42,17 +42,61 @@
       </p>
 
       <p>
-        And with the integrations of LLMs, the fact is that it can be trained on previous results or runs, can we possibly create a self-evolving HPO system that can learn from previous runs and improve itself?
+        And with the integrations of LLMs, the fact is that it can be trained on previous results or runs, can we possibly create a self-evolving HPO system that can learn from previous runs and improve itself? 
+        Lets run through our thought processes for different portions below.
       </p>
 
-      <h2>The Approach</h2>
+      <h2>Proof of concept</h2>
       <ul>
         <li>
-          As previous research suggests, Bayesian Optimization is 
+          Before we formally started the project we wanted to test if we could replicate the results of previous papers, testing it warm start capabilites.
+          My senior had previously ran a few BO runs on the a significant chunk of <a href="https://www.openml.org/search?type=data">OpenML</a> tasks, using different ml algorithms.
+          We extracted out metadata from the task and used it to generate an Supervised Fine Tuning script, a rough template for one task would be:s
+          <pre><code>
+            {system: You are an AutoML warm start agent. You are given a task and a dataset. You need to return a model and a set of hyperparameters that are likely to perform well on the task.}
+            {user: Dataset: {dataset and its features}, ML model used: {ml model used and information on it hyperparameters eg. {hp_name:learning_rate, data_type:float, upper_bound:1.0, lower_bound:0.0}}}
+            {assistant: {Optimal hyerparameter configuration}}
+          </code></pre>
+          We then tested it by asking it to generate 1 config 3 times and took the best configuration, overall, this yielded positive results, which allowed us to proceed onto the next step.
+        </li>
+        <h2>How to further integrate LLMs into the HPO process (with a splash of prompt engineering)</h2>
+        <ul>
+          <li>
+            We decided to use an LLM to mix with Bayesian Otpimization throuhgout the whole phase, however again we needed ot test if this actually helped.
+            For a baseline experiment we decided to test what yeild the best results (pure, llm, mixture of bo and llm, or pure bo) would rpoduce the best results, for this experiment we used gpt-4o-mini
+            for the LLM and we used tested using different bayesian optimization algorithms (TPE, SMAC, CMA-ES) to see which yielded the best results.
+            We were genuinely surpuised that even though with a proprietary and untrained llm, the mixture still performed better than the pure bo or llm and that TPE yield the best results when mixed with the llm and
+            and that its froamt complaince for the json reply was mostly adhered to.
+          </li>
+          <li>
+            next we wanted to test what prompt should be added into the LLM to help it ti find better hyerparameters, we tested a bunch of prompt configurations (adding in recent k, top k, bottom k, llm thought process, llm summary of runs)
+            after extensive testing of over 26 different configurations varying both the k value and the factors added into the prompt, here is what wokred best for us:
+            {top 5, bottom 5, recent 10}
+            We also wanted to find out the best proportion of llms to bo, we found out between 50/50 or 70/30 llm/bo ratio was the best for us.
+          </li>
+        </ul>
+      <h2>Post-training</h2>
+      <ul>
+        <li>
+          We decided to fine tune a Qwen-3.5-9B, but before that we tested the capabilities for the current model. It was bad it could not even propoer json or that it went on explaining baout it thought proces sinstead of outputing json.
+          This was a good starting poitn as it allowed us to show a gradal imrpovement for each stagef our training method. We decided to use lora adaptor so that we could sweeep more hyerparameters and the fact that ti was a simpler task
+          We used the preiou method of sueprvised fine tuning to teach it to output propoer json for the tasks and at the same time hope it could udnerstad certain trends r leanr patern on what kind of cofogurtions to recommend for what kind of tasks.
+        </li>
+        <li>  
+          After that we used DPO/ORPO to train the model, for this we had to teach to model not just the most optimla output but how to imrpove given the top5, bottom 5 and recent 10.
+          Form the bo trajectories we extracted out so improvement groups where as long as there was a improvement of over a certain threshold (widly dependedent on the metric used, baalnced accruacy or mse)
+          we would use it as a trainign example, we wouldsort of replay what hapapened during the bo run, allowing the model to so call visualise it was at the stage before th imvepeoment and ask it to improve the configuration.
         </li>
         <li>
-          Used a Gaussian process to find similar tasks, and fANOVA to decide if a
-          finished job can transfer.
+          Hoever, the problme we faced was, what shoudl we put as the reejcted option? Firstly shoudlw e jsut put in a ranomd configuration whcih we had previously had evauted which eprformed worse than the accepted one
+          we also could find the confgiruation with the smallest Hamming distance and one that perfomrs worse than the imrpoved one and use that.
+          However, one problem we found out that due to the limited number of runs we had, the hyperpaameter with the smallest Hamming distance was around 3. Nonethelesswe still tested it out and it yielded positive results.
+          However, we asked one deeper question, would a more clear signa for exmpale Hammign distance communicate signals on which yeprraametr to tune and in what direcgtion rather than a more noisy signal. 
+          What we tried next was to evalute configs whcih had Hamming distance
+        </li>
+      </ul>
+        <li>
+          
         </li>
         <li>
           Designed a multi-stage post-training stack on Qwen-3.5-9B (SFT, DPO, REINFORCE).
