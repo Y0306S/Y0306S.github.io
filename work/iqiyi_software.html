@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dubbing as software — Chua Yuan Shan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <link rel="icon" href="../img/favicon.png?v=3" type="image/png" />
+  <script src="../js/site.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <a class="wordmark" href="../index.html">yuan shan/chua</a>
+        <span class="running">singapore</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="../index.html">about</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../work.html" aria-current="page">work</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../cv.html">cv</a>
+      </nav>
+    </header>
+
+    <main class="dive">
+      <p class="back"><a href="../work.html">← work</a> · <a href="iqiyi_ai.html">the models →</a></p>
+      <h1>Dubbing as software</h1>
+      <p class="meta">iQIYI International · full stack intern · Aug 2026 – Jan 2027</p>
+
+      <h2>The problem</h2>
+      <p>
+        Dubbing an episode by hand is a long afternoon of cutting audio, matching mouths,
+        and stitching speech that still sounds assembled. Editors already have picture
+        and some kind of subtitle. What they need is a new voice sitting on the right
+        mouths, mixed with the original music, and delivered in a form the rest of
+        production will actually accept.
+      </p>
+      <p>
+        The models are a separate story
+        (<a href="iqiyi_ai.html">here</a>). This page is the factory around them:
+        how a click becomes a job, how an episode moves through hours of work,
+        and what broke once real editors were on it. The hard part was never
+        “call a model.” It was hour-long jobs, version drift between laptop and
+        pod, and one bad subtitle line quietly ruining a whole episode.
+      </p>
+
+      <h2>We did not start from a blank website</h2>
+      <p>
+        The translation portal was already there: login, staff, caption tools, other
+        micro-apps. Dubbing had to sit next to translation, not fork a second site.
+        So we plugged in as a child app on its own path, Vue 2 and all, because rewriting
+        the portal would have cost more than living with it.
+      </p>
+      <p>
+        A click never goes Vue → Python in a straight line. It goes through the host,
+        into a Java service we treat as a BFF, and only then into Flask. Java already
+        knew who you were and how to wrap a stable response. Python is better at media
+        and ML orchestration. Java is better at “who is this person” and “here is a URL
+        the waveform player can hit with cookies.” Raw object-storage links and browser
+        CORS do not agree with each other.
+      </p>
+      <p>
+        China versus overseas is a fork at the host, not a second product. Same Vue,
+        different API base. If a fix only works on one of those hosts, it fails for
+        half the editors.
+      </p>
+
+      <h2>HTTP should never wait for synthesis</h2>
+      <p>
+        Produce and mix are minutes to hours. Flask returning after the wav exists
+        would have been a thirty-second timeout pretending to be an architecture.
+        So Flask records the intent, writes a row, enqueues, and hands back a task id.
+        Celery owns the work. Redis is the waiting room.
+      </p>
+      <p>
+        The GPU / audio jobs are submit-and-callback, not <code>await tts()</code>.
+        We insert an empty callback row, put that id on the URL they call later, and
+        treat HTTP 200 as “the gateway blinked,” not “the episode is done.” A 504 on
+        submit used to mark pre-produce failed while synthesis was still running.
+        We had to tell transport failure from job failure: retry, keep the id, scale
+        timeout with audio length, and only mark ready when the JSON actually contains
+        a URL.
+      </p>
+      <p>
+        Celery is not one pile of jobs either. Produce and a single-line regen should
+        feel somewhat interactive, so they sit on the default queue. Export is
+        FFmpeg-heavy, so it has its own. Material supply — pulling dialogue, music-and-effects,
+        extra vocals, video, then normalising — can wait on the gateway for an hour,
+        and it used to freeze default. We split that onto its own queue so extract
+        could not starve “make this line again.”
+      </p>
+
+      <h2>What happens to one episode</h2>
+      <p>
+        If I had to draw this on a whiteboard I would want two pictures: who talks
+        to whom when a human clicks, and what happens to one episode over hours.
+        They look similar on a slide. They are not the same system.
+      </p>
+      <ul>
+        <li>
+          Admin turns a catalog show into a language project and an episode task.
+          Nothing cloned has happened yet. Material supply is the unglamorous part
+          that used to block everything: original dialogue we will replace, the
+          international music-and-effects bed we want to keep, crowd and similar,
+          and the mixed tape whose duration we actually trust when we cut shards.
+          Mini-dramas and long dramas do not share the same material rules.
+        </li>
+        <li>
+          Pre-produce is “make me a first pass before the editor sits down.” Each
+          line becomes a short wav tied to a subtitle row. If nobody has lines, we
+          mark skipped so the UI does not poll forever. How we pick a voice and a
+          reference clip is on the <a href="iqiyi_ai.html">models page</a>.
+        </li>
+        <li>
+          Then a human opens the studio. Picture on one side, waveforms for dialogue,
+          music, and extra vocals, captions glued to the playhead. Split a line and
+          we have to produce two new clips. Merge and we stitch. Stretch duration
+          and both UI and backend refuse below FFmpeg’s 0.5 atempo. Swap a reference
+          or a model and we may reuse work already on the task.
+        </li>
+        <li>
+          Export is a chain, not a button that blocks the browser. Estimate time so
+          the progress bar is at least the right order of magnitude. Build the full
+          dialogue track (stitch our line clips, or take a vendor mix and volume-normalise
+          it). Mix dialogue over music and extra vocals. Mux onto picture, optionally
+          burn captions, and remember which material URLs went into the file so a
+          black video is explainable. If hard-sub fails we must not pretend the MP4
+          succeeded.
+        </li>
+        <li>
+          QC can still happen after that first export. Someone in Premiere can pull
+          TTS onto a timeline they already know. None of that replaces delivery into
+          the video factory, and we listen for status instead of sitting on HTTP for
+          the rest of the job’s life.
+        </li>
+      </ul>
+
+      <h2>What production taught us</h2>
+      <p>
+        We shipped. Then production taught us the rest. Almost every incident was
+        the same handful of mistakes: treating an async system as a sync function,
+        assuming the laptop binary was the production binary, assuming one JSON
+        shape, failing a whole episode because one speaker was bad, loading the
+        entire episode into the browser or onto one queue.
+      </p>
+      <ul>
+        <li>
+          <strong>Long-episode export.</strong> Shorts were fine. Feature length hung.
+          We had been overlaying line clips with pydub on a silent buffer the length
+          of the show. Fine for a mini-drama; on a long drama it eats RAM and time.
+          We moved to FFmpeg delay-plus-amix, in chunks. Then staging still worked
+          and prod mix died, because staging understood an <code>amix=normalize</code>
+          flag and the worker image did not. The FFmpeg in the README is not the
+          FFmpeg in the pod. We learned to probe the binary, then pinned the worker
+          and turned normalize back on.
+        </li>
+        <li>
+          <strong>Material supply starved pre-produce.</strong> Editors hit produce
+          and waited while the same workers sat on stem jobs. Own queue, split stems
+          into separate jobs, stop sharding on the wrong duration. Volume-normalise
+          would say “accepted” before the URL existed, so we poll until it is really there.
+        </li>
+        <li>
+          <strong>Hot deploy almost became its own outage.</strong> Prompts change
+          faster than images, so the worker can pull and restart. Naive restart
+          dropped in-flight FFmpeg, wedged a lock so every later call got 409, or
+          reused the old node name and SIGTERM’d the process we had just started.
+          The thing that finally worked was boring: snapshot pids, timestamp the
+          new name, wait until the new consumer is actually consuming, SIGTERM only
+          the old processes, leave the dashboard alone.
+        </li>
+        <li>
+          <strong>Subtitles failed quietly, which is worse than a crash.</strong>
+          Empty timestamps left garbage on the whole timeline. Hard-sub could fail
+          and we still uploaded an MP4 that looked successful with no captions.
+          Times were int or string. Mini-drama files did not match the official
+          full-season timeline, so we cut in the wrong place. Downstream will not
+          let AI dubbing overwrite a professional human subtitle, and that is a
+          business rule, not a bug.
+        </li>
+        <li>
+          <strong>The frontend had “it worked on one episode” problems.</strong>
+          Loading every reference for an episode kills the tab, so the subtitle list
+          grew server pagination that can still land on the line you are looking at.
+          Audio in the split dialog has to fetch with credentials or it 401s.
+          Expanding a background track used to reset the playhead. Alter-speed below
+          0.5 has to be blocked in the UI with the same words FFmpeg would have used.
+        </li>
+      </ul>
+
+      <h2>What I would still do</h2>
+      <p>
+        The studio component should be split. Subtitle shapes should be one DTO, not
+        five spellings of “original dialogue.” Gateway payloads should have contract
+        tests. FFmpeg version should be a build artifact, not a surprise. The hard
+        part of this job was making the factory honest when something in the middle
+        took an hour, or lied.
+      </p>
+
+      <ul class="tags" aria-label="Skills">
+        <li>Flask</li>
+        <li>Celery</li>
+        <li>Redis</li>
+        <li>FFmpeg</li>
+        <li>Vue</li>
+        <li>JavaScript</li>
+        <li>async callbacks</li>
+      </ul>
+    </main>
+
+    <footer>
+      <details class="email-pop">
+        <summary>email</summary>
+        <div class="email-pop-panel">
+          <p>personal</p>
+          <a href="mailto:chuanyuanshan@gmail.com">chuanyuanshan@gmail.com</a>
+          <p>school</p>
+          <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
+        </div>
+      </details>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+    </footer>
+  </div>
+</body>
+</html>

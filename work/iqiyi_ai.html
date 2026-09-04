@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dubbing as speech models — Chua Yuan Shan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <link rel="icon" href="../img/favicon.png?v=3" type="image/png" />
+  <script src="../js/site.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <a class="wordmark" href="../index.html">yuan shan/chua</a>
+        <span class="running">singapore</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="../index.html">about</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../work.html" aria-current="page">work</a>
+        <span class="slash" aria-hidden="true">/</span>
+        <a href="../cv.html">cv</a>
+      </nav>
+    </header>
+
+    <main class="dive">
+      <p class="back"><a href="../work.html">← work</a> · <a href="iqiyi_software.html">the software →</a></p>
+      <h1>Dubbing as speech models</h1>
+      <p class="meta">iQIYI International · full stack intern · Aug 2026 – Jan 2027</p>
+
+      <h2>The problem</h2>
+      <p>
+        A dubbed line has to do three things at once. It has to sound like the same
+        person. It has to fit the mouth that is already on screen. And it has to
+        carry the emotion of the original, not a polite mid tone that makes every
+        scene feel like a trailer.
+      </p>
+      <p>
+        The factory that queues those jobs and mixes the stems is
+        <a href="iqiyi_software.html">the other page</a>. This one is how we chose
+        voices, compared models, and tried not to fail a whole episode because one
+        role or one language was awkward.
+      </p>
+
+      <h2>TTS is not the same job as cloning</h2>
+      <p>
+        Some markets we synthesise from text. Some we convert from a reference clip
+        so the timbre stays close to the original actor. Those are different models,
+        different request shapes, and different failure modes. Mixing them up in the
+        UI — showing the wrong “TTS” url, sending a clone id as a text-model param —
+        is how a character disappears from an episode.
+      </p>
+      <p>
+        Before an editor sits down we try to make a first pass: map speakers to
+        timbres, pick a reference clip per line, submit TTS or voice conversion,
+        and wait. Each line becomes a short wav tied to a subtitle row. If Thai has
+        no speaker map for a role, we skip that voice instead of failing the episode.
+        Manual conversion is one job per speaker. Smash every role into one request
+        and someone vanishes.
+      </p>
+      <p>
+        Spanish and Portuguese needed speaker injection restored on subtitle supply,
+        plus a frontend model id that is not the id the backend wants. That kind of
+        lie is how you keep a dropdown readable. Rewrite-only tasks fall back to
+        Chinese if there is no English reference, and we hide the algorithm picker
+        so nobody submits an empty produce.
+      </p>
+
+      <h2>Which model, and for what</h2>
+      <p>
+        I spent a stretch comparing and fine-tuning TTS and voice-conversion models
+        for cross-lingual inference: GPT-SoVITS, Qwen-3.0-TTS, Seed-VC, Chatterbox.
+        The question was not “which demo sounds nicest on one sentence.” It was
+        whether a line still holds after you change language, stretch duration, and
+        sit it under music.
+      </p>
+      <p>
+        Background characters are a different mess. You often do not have a clean
+        reference for them. I evaluated and fine-tuned speech emotion recognition —
+        emotion2vec, and a fine-tuned wav2vec2 — so we could pull emotion- and
+        timbre-matched reference audio for those roles instead of giving everyone
+        the same polite voice.
+      </p>
+      <p>
+        “Is this the same person” is its own small service: speaker embeddings
+        (ERes2Net) so ASR GPUs and embedding GPUs can scale separately. Whisper
+        needed word timestamps off an audio URL. The faster wheels did not install
+        cleanly on the old glibc box — tiktoken wanted Rust, intranet PyPI was
+        picky — so the official openai-whisper build with a pinned tiktoken was
+        the one that actually ran. The GPU box also cannot see internal buckets,
+        so the audio URL has to be public object storage.
+      </p>
+
+      <h2>Mouths, not just words</h2>
+      <p>
+        AI lines are wrong often enough that we built a human loop. GPT rewrite
+        prompts are versioned by language. Timing is one reason. The last mouth
+        shape is another. For English we map the last Chinese final, via pypinyin,
+        into closed / rounded / open / neutral ending sounds so the mouth is not
+        on “ee” when the Chinese was “ang.” The rounded viseme list forgot the
+        final “o” until a hotfix, which is a small sentence that still makes me
+        wince.
+      </p>
+      <p>
+        Prompt iteration is faster than baking a new image, which is why the
+        worker can pull and restart — the ops of that restart lives on the
+        <a href="iqiyi_software.html">software page</a>. The modelling lesson is
+        simpler: the prompt is part of the product, and it changes after you ship.
+      </p>
+
+      <h2>What still sounds fake</h2>
+      <p>
+        One missing map should skip a voice, not kill the episode. Re-dub should
+        copy source subtitle rows, mark reused refs as ready, and not keep an old
+        reference if the source line was deleted. In-house versus a vendor changes
+        which URL even counts as “the TTS.”
+      </p>
+      <p>
+        I would still want contract tests on the gateway payloads, and a clearer
+        split between “this model id is what editors see” and “this id is what
+        synthesis actually wants.” The interview version of this work is not the
+        model card. It is whether a line can get onto a timeline, survive a split,
+        and still sound like the same person.
+      </p>
+
+      <ul class="tags" aria-label="Skills">
+        <li>TTS</li>
+        <li>voice conversion</li>
+        <li>speech emotion recognition</li>
+        <li>speaker embeddings</li>
+        <li>Whisper</li>
+        <li>fine-tuning</li>
+        <li>cross-lingual</li>
+      </ul>
+    </main>
+
+    <footer>
+      <details class="email-pop">
+        <summary>email</summary>
+        <div class="email-pop-panel">
+          <p>personal</p>
+          <a href="mailto:chuanyuanshan@gmail.com">chuanyuanshan@gmail.com</a>
+          <p>school</p>
+          <a href="mailto:ychu060@e.ntu.edu.sg">ychu060@e.ntu.edu.sg</a>
+        </div>
+      </details>
+      <span>· <a href="https://github.com/Y0306S">github</a> · <a href="https://www.linkedin.com/in/yuan-shan-chua-840307115">linkedin</a></span>
+    </footer>
+  </div>
+</body>
+</html>
